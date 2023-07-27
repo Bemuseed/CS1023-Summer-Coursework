@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Countdown Word Game</title>
+        <title>Word Game</title>
         <style>
             * {
                 font-family: courier new;
-                font-variant: sans-serif;
+                font-variant: mono;
                 text-align: center;
+            }
+
+            .central {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
             }
 
             #centre-box {                
                 width: 50%;
                 height: 50%;
                 border: 3px solid black;
+                border-radius: 30px;
                 padding: 10px;
-
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
 
                 margin: auto;
             }
@@ -27,12 +30,23 @@
             #game-title {
                 font-size: 60px;
             }
+
+            .button {
+                background-color: antiquewhite;
+                border-color: black;
+                border-radius: 25px;
+                color: black;
+                padding: 20px 15px;
+                text-align: center;
+                font-size: 30px;
+            }
         </style>
     </head>
     <body>
-        <div id="centre-box">
-            <h1 id="game-title">Page title</h1>
+        <div id="centre-box" class="central">
+            <h1 id="game-title">Word Game</h1>
             <p>Is this even different</p>
+            <a href="./instructions.html"><button class="button" onclick="">Here</button></a>
         </div>
     </body>
 </html>
