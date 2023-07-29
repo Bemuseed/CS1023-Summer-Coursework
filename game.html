@@ -3,7 +3,10 @@
     <head>
         <title>Word Game</title>
         <link rel="stylesheet" href="styling.css">
+        <script src="utilities.js"></script> 
         <script>
+            const vowels = "aeiou";
+            const consonants = "bcdfghjklmnpqrstvwxwz";
             let letters = "";
             
             function addLetter(letter) {
@@ -19,11 +22,11 @@
             }
 
             function addVowel() {
-                addLetter("a");
+                addLetter(getRndElement(vowels));
             }
 
             function addConsonant() {
-                addLetter("x");
+                addLetter(getRndElement(consonants));
             }
 
             function wordAttempt() {
