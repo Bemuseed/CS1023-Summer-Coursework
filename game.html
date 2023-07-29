@@ -14,6 +14,7 @@
                 if (letters.length == 9) {
                     document.getElementById("vowel-button").remove();
                     document.getElementById("cons-button").remove();
+                    document.getElementById("word-form").attributes.removeNamedItem("hidden");
                 }
             }
 
@@ -24,11 +25,23 @@
             function addConsonant() {
                 addLetter("x");
             }
+
+            function wordAttempt() {
+                let wordInput = document.getElementById("word");
+                let wordList = document.getElementById("word-list");
+                wordList.innerHTML += "<p>" + wordInput.value + "</p>";
+                wordInput.value = "";
+            }
+
         </script>
     </head>
-    <body onLoad="">
+    <body>
         <p id="letters">_________</p>
         <button id="vowel-button" onclick="addVowel()">Vowel</button>
         <button id="cons-button" onclick="addConsonant()">Consonant</button>
+        <form action="javascript:;" onsubmit="wordAttempt()" id="word-form" hidden>
+            <input type="text" id="word" name="word">
+        </form>
+        <div id="word-list"></div>
     </body>
 </html>
