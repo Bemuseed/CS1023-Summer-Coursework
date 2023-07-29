@@ -2,8 +2,33 @@
 <html>
     <head>
         <title>Word Game</title>
+        <link rel="stylesheet" href="styling.css">
+        <script>
+            let letters = "";
+            
+            function addLetter(letter) {
+                letters = letters + letter;
+                let lettersElement = document.getElementById("letters");
+                lettersElement.innerHTML = letters + "_".repeat(9 - letters.length)
+
+                if (letters.length == 9) {
+                    document.getElementById("vowel-button").remove();
+                    document.getElementById("cons-button").remove();
+                }
+            }
+
+            function addVowel() {
+                addLetter("a");
+            }
+
+            function addConsonant() {
+                addLetter("x");
+            }
+        </script>
     </head>
-    <body>
-        <p>Placeholder</p>
+    <body onLoad="">
+        <p id="letters">_________</p>
+        <button id="vowel-button" onclick="addVowel()">Vowel</button>
+        <button id="cons-button" onclick="addConsonant()">Consonant</button>
     </body>
 </html>
