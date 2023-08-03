@@ -3,11 +3,27 @@
     <head>
         <title>Word Game</title>
         <link rel="stylesheet" href="styling.css">
+        <style>
+            #barBackground {
+            background-color: #ecfdf5;
+            height: 25px;
+            border-radius: 25px;
+            }
+
+            #timerFill {
+                background-color: #34d399;
+                height: 25px;
+                border-radius: 25px;
+                width: 0%;
+            }
+        </style>
         <script src="utilities.js"></script> 
         <script>
             const vowels = "aeiou";
             const consonants = "bcdfghjklmnpqrstvwxwz";
             let letters = "";
+            let initialTimeLeft = 5;
+            let timeLeft;
             
             function addLetter(letter) {
                 letters = letters + letter;
@@ -15,10 +31,20 @@
                 lettersElement.innerHTML = letters + "_".repeat(9 - letters.length)
 
                 if (letters.length == 9) {
-                    document.getElementById("vowel-button").remove();
-                    document.getElementById("cons-button").remove();
-                    document.getElementById("word-form").attributes.removeNamedItem("hidden");
+                    startGuessingStage();
                 }
+            }
+
+            function startGuessingStage() {
+                document.getElementById("vowel-button").remove();
+                document.getElementById("cons-button").remove();
+                document.getElementById("word-form").attributes.removeNamedItem("hidden");
+                document.getElementById("time-box").attributes.removeNamedItem("hidden");
+                startTimer();
+            }
+
+            function gameEnd() {
+                document.getElementById("word-form").attributes.setNamedItem("hidden");
             }
 
             function addVowel() {
@@ -29,16 +55,80 @@
                 addLetter(getRndElement(consonants));
             }
 
+            function validWord(word) {
+                if (word.length <= 9) {
+                    let remainingLetters = letters;
+                    let valid;
+                    for (let c of word) {
+                        valid = false;
+                        for (let l=0; l < remainingLetters.length; l++) {
+                            if (c === remainingLetters[l]) {
+                                valid = true;
+                                remainingLetters = remainingLetters.slice(0,l) + remainingLetters.slice(l+1,remainingLetters.length);
+                                break;
+                            }
+                        }
+                        if (!valid) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
             function wordAttempt() {
                 let wordInput = document.getElementById("word");
                 let wordList = document.getElementById("word-list");
-                wordList.innerHTML += "<p>" + wordInput.value + "</p>";
+                if (validWord(wordInput.value)) {
+                    wordList.innerHTML += "<p>" + wordInput.value + "</p>";
+                }
+                else {
+                    console.log("Invalid word");
+                }
                 wordInput.value = "";
             }
+            
+            function startTimer() {
+                timeLeft = initialTimeLeft;
+                displayTime();
+                timer = setInterval(decreaseTime, 1000);
+            }
 
+            function decreaseTime() {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    displayTime();
+                    displayTimeBar();
+                } else {
+                    clearInterval(timer);
+                    document.getElementById('timeLeft').innerHTML = 'Time Up';
+                    gameEnd();
+                }
+            }
+            
+            function displayTime() {
+                document.getElementById('timeLeft').innerHTML = timeLeft;
+            }
+
+            function displayTimeBar() {
+                barFill = document.getElementById("timerFill");
+
+                percentFill = 100 - ((timeLeft / initialTimeLeft) * 100);
+                barFill.style.width = percentFill + "%";
+            }
         </script>
     </head>
     <body>
+        <div id="time-box" hidden>
+            <p id="timeLeft"></p>
+            <div id="timerBar">
+                <div id="timerBackground"></div>
+                <div id="timerFill"></div>
+            </div>
+        </div>
         <p id="letters">_________</p>
         <button id="vowel-button" onclick="addVowel()">Vowel</button>
         <button id="cons-button" onclick="addConsonant()">Consonant</button>
