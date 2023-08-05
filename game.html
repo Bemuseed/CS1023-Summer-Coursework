@@ -22,7 +22,7 @@
             const vowels = "aeiou";
             const consonants = "bcdfghjklmnpqrstvwxwz";
             let letters = "";
-            let initialTimeLeft = 5;
+            let maxTime = 60;
             let timeLeft;
             let validWordAttempts = [];
             
@@ -94,7 +94,7 @@
             }
             
             function startTimer() {
-                timeLeft = initialTimeLeft;
+                timeLeft = maxTime;
                 displayTime();
                 timer = setInterval(decreaseTime, 1000);
             }
@@ -117,7 +117,7 @@
             function displayTimeBar() {
                 barFill = document.getElementById("timerFill");
 
-                percentFill = 100 - ((timeLeft / initialTimeLeft) * 100);
+                percentFill = 100 - ((timeLeft / maxTime) * 100);
                 barFill.style.width = percentFill + "%";
             }
 

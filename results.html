@@ -3,6 +3,8 @@
     <head>
         <title>Word Game - Results</title>
         <link rel="stylesheet" href="styling.css">
+        <script src="scoring.js"></script>
+        <script src="wordList.js"></script>
         <script>
             let letters;
             let wordAttempts;
@@ -17,30 +19,15 @@
                 }
             }
 
-            function isAWord(w) {
-                return true;
-            }
-            function getScore(word) {
-                let score = 0;
-                for (let ltr of word) {
-                    score++;
+            function isAWord(word) {
+                if (wordList.includes(word)) {
+                    return true;
                 }
-                return score;
+                return false;
             }
 
-            function getWordScores() {
-                let scoreDict = {};
-                for (let w of wordAttempts) {
-                    if (isAWord(w)) {
-                        scoreDict[w] = getScore(w);
-                    }
-                    else {
-                        scoreDict[w] = 0;
-                    }
-                }
-                return scoreDict;
-            }
-        </script>
+
+       </script>
     </head>
     <body onload="onLoad()">
         <div id="score-box"></div>
