@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Word Game - Results</title>
+        <link rel="stylesheet" href="styling.css">
+        <script>
+            let letters;
+            let wordAttempts;
+
+            function onLoad() {
+                letters = sessionStorage.getItem("letters");
+                wordAttempts = JSON.parse(sessionStorage.getItem("wordAttempts"));
+                let scoreBox = document.getElementById("score-box");
+                let wordScores = getWordScores(wordAttempts);
+                for (let w of Object.keys(wordScores)) {
+                    scoreBox.innerHTML += "<p>" + w + " - " + wordScores[w] + "</p>";
+                }
+            }
+
+            function isAWord(w) {
+                return true;
+            }
+            function getScore(word) {
+                let score = 0;
+                for (let ltr of word) {
+                    score++;
+                }
+                return score;
+            }
+
+            function getWordScores() {
+                let scoreDict = {};
+                for (let w of wordAttempts) {
+                    if (isAWord(w)) {
+                        scoreDict[w] = getScore(w);
+                    }
+                    else {
+                        scoreDict[w] = 0;
+                    }
+                }
+                return scoreDict;
+            }
+        </script>
+    </head>
+    <body onload="onLoad()">
+        <div id="score-box"></div>
+    </body>
+</html>
