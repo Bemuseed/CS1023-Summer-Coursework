@@ -57,7 +57,7 @@
             }
 
             function validWord(word) {
-                if (word.length <= 9) {
+                if (word.length <= 9 && !validWordAttempts.includes(word)) {
                     let remainingLetters = letters;
                     let valid;
                     for (let c of word) {
