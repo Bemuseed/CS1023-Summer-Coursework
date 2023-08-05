@@ -82,10 +82,12 @@
 
             function wordAttempt() {
                 let wordInput = document.getElementById("word");
-                let wordList = document.getElementById("word-list");
-                if (validWord(wordInput.value)) {
-                    wordList.innerHTML += "<p>" + wordInput.value + "</p>";
-                    validWordAttempts.push(wordInput.value);
+                let word = wordInput.value;
+                word = word.toLowerCase();
+                let wordList = document.getElementById("word-list"); 
+                if (validWord(word)) {
+                    wordList.innerHTML += "<p>" + word + "</p>";
+                    validWordAttempts.push(word);
                 }
                 else {
                     console.log("Invalid word");
