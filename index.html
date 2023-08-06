@@ -1,50 +1,81 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Word Game</title>
-        <link rel="stylesheet" href="styling.css">
-        <style>
-            .central {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
 
-            #centre-box {                
-                width: 50%;
-                height: 50%;
-                border: 3px solid black;
-                border-radius: 30px;
-                padding: 10px;
-                text-align: center;
+<head>
+    <title>Word Game</title>
+    <link rel="stylesheet" href="styling.css">
+    <style>
+        #title-box {
+            background-color: #f5f5f5;
+            border-style: solid;
+            border-radius: 20px;
+            border-width: 5px;
+            border-color: black;
 
-                margin: auto;
-            }
+            padding: 20px;
+            max-width: 900px;
+            margin-bottom: 20px;
+        }
 
-            #game-title {
-                font-size: 60px;
-            }
+        #game-title {
+            font-size: 8em;
+        }
 
-            .button {
-                background-color: antiquewhite;
-                border-color: black;
-                border-radius: 25px;
-                color: black;
-                padding: 20px 15px;
-                text-align: center;
-                font-size: 30px;
-                margin: 3px;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="centre-box" class="central">
-            <h1 id="game-title">Word Game</h1>
-            <p>Is this even different</p>
-            <a href="./instructions.html"><button class="button">Instructions</button></a><br>
-            <a href="./game.html"><button class="button">Play</button></a>
-        </div>
-    </body>
+        #centre-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+
+            background-color: #f5f5f5;
+            border-style: solid;
+            border-radius: 20px;
+            border-width: 5px;
+            border-color: black;
+            padding: 30px;
+
+            max-width: 500px;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #3498db;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+
+            min-width: 250px;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .button+.button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="title-box">
+        <h1 id="game-title">Scrountdown</h1>
+    </div>
+    <div id="centre-box">
+        <p>Put your vocab to the test in this exciting fusion of two beloved games!</p>
+        <a href="./instructions.html"><button class="button">Instructions</button></a><br>
+        <a href="./game.html"><button class="button">Play</button></a>
+        <p>By Caleb Mullan</p>
+    </div>
+</body>
+
 </html>
