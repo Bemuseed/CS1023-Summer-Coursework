@@ -47,3 +47,23 @@ function getWordScores() {
     }
     return scoreDict;
 }
+
+function isAWord(word) {
+    let listLength = wordList.length;
+    let l = 0;
+    let r = listLength - 1;
+    let m;
+    while (l <= r) {
+        m = Math.floor((l + r) / 2);
+        if (wordList[m] < word) {
+            l = m + 1;
+        }
+        else if (wordList[m] > word) {
+            r = m - 1;
+        }
+        else {
+            return true;
+        }
+    }
+    return false;
+}

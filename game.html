@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Word Game</title>
+    <title>Scrountdown</title>
     <link rel="stylesheet" href="styling.css">
     <style>
         #timerBar {
@@ -10,12 +10,6 @@
             margin: 15px;
             border: 5px solid black;
             border-radius: 25px;
-        }
-
-        #barBackground {
-            background-color: #ecfdf5;
-            height: 25px;
-            border-radius: inherit;
         }
 
         #timerFill {
@@ -138,24 +132,6 @@
         let timeLeft;
         let validWordAttempts = [];
 
-        function addLetter(letter) {
-            letters = letters + letter;
-            let lettersElement = document.getElementById("letters");
-            lettersElement.innerHTML = letters.split("").join(" ") + " _".repeat(9 - letters.length);
-
-            if (letters.length == 9) {
-                startGuessingStage();
-            }
-        }
-
-        function startGuessingStage() {
-            document.getElementById("buttons-container").remove();
-            document.getElementById("word-form").attributes.removeNamedItem("hidden");
-            document.getElementById("time-box").style.display = "flex";
-            document.getElementById("word-list").style.display = "flex";
-            startTimer();
-        }
-
         function getLetterFromDistribution(dist) {
             let probTotal = Object.values(dist).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
             let target = getRndInteger(1, probTotal);
@@ -174,6 +150,16 @@
             return dist;
         }
 
+        function addLetter(letter) {
+            letters = letters + letter;
+            let lettersElement = document.getElementById("letters");
+            lettersElement.innerHTML = letters.split("").join(" ") + " _".repeat(9 - letters.length);
+
+            if (letters.length == 9) {
+                startGuessingStage();
+            }
+        }
+
         function addVowel() {
             let letter = getLetterFromDistribution(vowels);
             vowels = adjustLetterProbability(vowels, letter, 0.5);
@@ -185,6 +171,17 @@
             consonants = adjustLetterProbability(consonants, letter, 0.5);
             addLetter(letter);
         }
+
+        function startGuessingStage() {
+            document.getElementById("buttons-container").remove();
+            document.getElementById("word-form").attributes.removeNamedItem("hidden");
+            document.getElementById("time-box").style.display = "flex";
+            document.getElementById("word-list").style.display = "flex";
+            const music = document.getElementById("background-music");
+            music.play();
+            startTimer();
+        }
+
 
         function validWord(word) {
             if (word.length <= 9) {
@@ -274,6 +271,8 @@
             sessionStorage.setItem("letters", letters);
             sessionStorage.setItem("wordAttempts", JSON.stringify(validWordAttempts));
             window.location.href = "./results.html";
+            const music = document.getElementById("background-music");
+            music.pause();
         }
     </script>
 </head>
@@ -283,7 +282,6 @@
         <div id="time-box" class="contentBox">
             <p id="timeLeft"></p>
             <div id="timerBar">
-                <div id="timerBackground"></div>
                 <div id="timerFill"></div>
             </div>
         </div>
@@ -304,6 +302,7 @@
             <div id="word-list"></div>
         </div>
     </div>
+    <audio id="background-music" src="./audio/Happy Happy Game Show.mp3" preload="auto" loop></audio>
 </body>
 
 </html>

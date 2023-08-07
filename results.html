@@ -49,19 +49,16 @@
             let scoresElement = document.getElementById("scores");
             let wordScores = getWordScores(wordAttempts);
             for (let w of Object.keys(wordScores)) {
-                scoresElement.innerHTML += "<div class=\"row\"><div class=\"leftColumn\">" + w + "</div><div class=\"rightColumn\">" + wordScores[w] + "</div></div>";
+                scoresElement.innerHTML += "<div class=\"row\"><div class=\"leftColumn\">" 
+                    + w + "</div><div class=\"rightColumn\">" + wordScores[w] + "</div></div>";
             }
             scoresElement.innerHTML += "<hr>";
-            let totalScores = Object.values(wordScores).reduce((acuumulator, currentValue) => acuumulator + currentValue, 0);
-            scoresElement.innerHTML += "<div class = \"row\"><div class=\"leftColumn\">" + "Total: " + "</div><div class=\"rightColumn\">" + totalScores + "</div></div>";
-        }
-
-        function isAWord(word) {
-            if (wordList.includes(word)) {
-                return true;
-            }
-            return false;
-        }
+            let totalScores = Object.values(wordScores).reduce(
+                (accumulator, currentValue) => accumulator + currentValue, 0
+                );
+            scoresElement.innerHTML += "<div class = \"row\"><div class=\"leftColumn\">" 
+                + "Total: " + "</div><div class=\"rightColumn\">" + totalScores + "</div></div>";
+        } 
     </script>
 </head>
 
