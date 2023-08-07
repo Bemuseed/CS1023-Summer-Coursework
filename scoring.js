@@ -42,7 +42,7 @@ function getWordScores() {
             scoreDict[w] = getScore(w);
         }
         else {
-            scoreDict[w] = 0;
+            scoreDict[w] = -10;
         }
     }
     return scoreDict;

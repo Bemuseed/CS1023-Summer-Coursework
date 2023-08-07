@@ -1,201 +1,309 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Word Game</title>
-        <link rel="stylesheet" href="styling.css">
-        <style>
-            #barBackground {
+
+<head>
+    <title>Word Game</title>
+    <link rel="stylesheet" href="styling.css">
+    <style>
+        #timerBar {
+            width: 90%;
+            margin: 15px;
+            border: 5px solid black;
+            border-radius: 25px;
+        }
+
+        #barBackground {
             background-color: #ecfdf5;
             height: 25px;
+            border-radius: inherit;
+        }
+
+        #timerFill {
+            background-color: #34d399;
+            height: 25px;
             border-radius: 25px;
-            }
+            width: 0%;
+        }
 
-            #timerFill {
-                background-color: #34d399;
-                height: 25px;
-                border-radius: 25px;
-                width: 0%;
-            }
-        </style>
-        <script src="utilities.js"></script> 
-        <script>
-            let vowels = {
-                "a": 15,
-                "e": 21,
-                "i": 13,
-                "o": 13,
-                "u": 5
-            }
+        #time-box {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-content: center;
+            padding: 20px;
+            display: none;
+            margin-bottom: 20px;
+        }
 
-            let consonants = {
-                "b": 2,
-                "c": 3,
-                "d": 6,
-                "f": 2,
-                "g": 3,
-                "h": 2,
-                "j": 1,
-                "k": 1,
-                "l": 5,
-                "m": 4,
-                "n": 8,
-                "p": 4,
-                "q": 1,
-                "r": 9,
-                "s": 9,
-                "t": 9,
-                "v": 1,
-                "w": 1,
-                "x": 1,
-                "y": 1,
-                "z": 1
+        #timeLeft {
+            margin: 10px;
+            font-size: 2em;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-content: center;
+        }
+
+        #letters-box {
+            padding: 30px;
+            width: 600px;
+            margin-bottom: 20px;
+        }
+
+        #letters {
+            font-family: "Playfair Display";
+            font-size: 5em;
+            text-align: center;
+        }
+
+        #input-box {
+            padding: 30px;
+            max-width: 600px;
+        }
+
+        #buttons-container {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        #error-message {
+            display: none;
+            color: red;
+        }
+
+        #word-input {
+            border-radius: 5px;
+            padding: 7px;
+            font-size: 2em;
+            font-family: "Playfair Display";
+            height: 40px;
+            width: 100%;
+            transform: translateX(-5px);
+            margin-bottom: 20px;
+        }
+
+        #word-list {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 1.5em;
+            text-align: center;
+            margin: 0;
+        }
+
+        button {
+            min-width: 250px;
+        }
+    </style>
+    <script src="utilities.js"></script>
+    <script>
+        let vowels = {
+            "a": 15,
+            "e": 21,
+            "i": 13,
+            "o": 13,
+            "u": 5
+        }
+
+        let consonants = {
+            "b": 2,
+            "c": 3,
+            "d": 6,
+            "f": 2,
+            "g": 3,
+            "h": 2,
+            "j": 1,
+            "k": 1,
+            "l": 5,
+            "m": 4,
+            "n": 8,
+            "p": 4,
+            "q": 1,
+            "r": 9,
+            "s": 9,
+            "t": 9,
+            "v": 1,
+            "w": 1,
+            "x": 1,
+            "y": 1,
+            "z": 1
+        }
+
+        let letters = "";
+        let maxTime = 60;
+        let timeLeft;
+        let validWordAttempts = [];
+
+        function addLetter(letter) {
+            letters = letters + letter;
+            let lettersElement = document.getElementById("letters");
+            lettersElement.innerHTML = letters.split("").join(" ") + " _".repeat(9 - letters.length);
+
+            if (letters.length == 9) {
+                startGuessingStage();
             }
+        }
 
-            let letters = "";
-            let maxTime = 60;
-            let timeLeft;
-            let validWordAttempts = [];
-            
-            function addLetter(letter) {
-                letters = letters + letter;
-                let lettersElement = document.getElementById("letters");
-                lettersElement.innerHTML = letters + "_".repeat(9 - letters.length)
+        function startGuessingStage() {
+            document.getElementById("buttons-container").remove();
+            document.getElementById("word-form").attributes.removeNamedItem("hidden");
+            document.getElementById("time-box").style.display = "flex";
+            document.getElementById("word-list").style.display = "flex";
+            startTimer();
+        }
 
-                if (letters.length == 9) {
-                    startGuessingStage();
+        function getLetterFromDistribution(dist) {
+            let probTotal = Object.values(dist).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            let target = getRndInteger(1, probTotal);
+            let runningTotal = 0;
+            for (let k of Object.keys(dist)) {
+                runningTotal += dist[k];
+                if (runningTotal > target) {
+                    return k;
                 }
             }
+            throw new Error("Random target number not in probability range.");
+        }
 
-            function startGuessingStage() {
-                document.getElementById("vowel-button").remove();
-                document.getElementById("cons-button").remove();
-                document.getElementById("word-form").attributes.removeNamedItem("hidden");
-                document.getElementById("time-box").attributes.removeNamedItem("hidden");
-                startTimer();
-            }
+        function adjustLetterProbability(dist, letter, fraction) {
+            dist[letter] = dist[letter] * fraction;
+            return dist;
+        }
 
-            function gameEnd() {
-                document.getElementById("word-form").attributes.setNamedItem("hidden");
-            }
+        function addVowel() {
+            let letter = getLetterFromDistribution(vowels);
+            vowels = adjustLetterProbability(vowels, letter, 0.5);
+            addLetter(letter);
+        }
 
-            function getLetterFromDistribution(dist) {
-                let probTotal = Object.values(dist).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                let target = getRndInteger(1, probTotal);
-                let runningTotal = 0;
-                for (let k of Object.keys(dist)) {
-                    runningTotal += dist[k];
-                    if (runningTotal > target) {
-                        return k;
+        function addConsonant() {
+            let letter = getLetterFromDistribution(consonants);
+            consonants = adjustLetterProbability(consonants, letter, 0.5);
+            addLetter(letter);
+        }
+
+        function validWord(word) {
+            if (word.length <= 9) {
+                let remainingLetters = letters;
+                let valid;
+                for (let c of word) {
+                    valid = false;
+                    for (let l = 0; l < remainingLetters.length; l++) {
+                        if (c === remainingLetters[l]) {
+                            valid = true;
+                            remainingLetters = remainingLetters.slice(0, l) + remainingLetters.slice(l + 1, remainingLetters.length);
+                            break;
+                        }
+                    }
+                    if (!valid) {
+                        return false;
                     }
                 }
-                throw new Error("Random target number not in probability range."); 
+                return true;
             }
-
-            function adjustLetterProbability(dist, letter, fraction) {
-                dist[letter] = dist[letter] * fraction;
-                return dist;
+            else {
+                return false;
             }
+        }
 
-            function addVowel() {
-                let letter = getLetterFromDistribution(vowels);
-                vowels = adjustLetterProbability(vowels, letter, 0.5);
-                addLetter(letter);
-            }
-
-            function addConsonant() {
-                let letter = getLetterFromDistribution(consonants);
-                consonants = adjustLetterProbability(consonants, letter, 0.5);
-                addLetter(letter);
-            }
-
-            function validWord(word) {
-                if (word.length <= 9 && !validWordAttempts.includes(word)) {
-                    let remainingLetters = letters;
-                    let valid;
-                    for (let c of word) {
-                        valid = false;
-                        for (let l=0; l < remainingLetters.length; l++) {
-                            if (c === remainingLetters[l]) {
-                                valid = true;
-                                remainingLetters = remainingLetters.slice(0,l) + remainingLetters.slice(l+1,remainingLetters.length);
-                                break;
-                            }
-                        }
-                        if (!valid) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-
-            function wordAttempt() {
-                let wordInput = document.getElementById("word");
-                let word = wordInput.value;
-                word = word.toLowerCase();
-                let wordList = document.getElementById("word-list"); 
+        function wordAttempt() {
+            let wordInput = document.getElementById("word-input");
+            let word = wordInput.value;
+            word = word.toLowerCase();
+            let wordList = document.getElementById("word-list");
+            if (!validWordAttempts.includes(word)) {
                 if (validWord(word)) {
                     wordList.innerHTML += "<p>" + word + "</p>";
                     validWordAttempts.push(word);
+                    hideError();
                 }
                 else {
-                    console.log("Invalid word");
+                    displayError("Only use the letters presented above!");
                 }
-                wordInput.value = "";
             }
-            
-            function startTimer() {
-                timeLeft = maxTime;
+            else {
+                displayError("You've already entered that word!");
+            }
+            wordInput.value = "";
+        }
+
+        function displayError(message) {
+            errorElement = document.getElementById("error-message");
+            errorElement.style.display = "inline";
+            errorElement.innerHTML = "<p>" + message + "</p>";
+        }
+
+        function hideError() {
+            errorElement = document.getElementById("error-message");
+            errorElement.style.display = "none";
+        }
+
+        function startTimer() {
+            timeLeft = maxTime;
+            displayTime();
+            timer = setInterval(decreaseTime, 1000);
+        }
+
+        function decreaseTime() {
+            if (timeLeft > 0) {
+                timeLeft--;
                 displayTime();
-                timer = setInterval(decreaseTime, 1000);
+                displayTimeBar();
+            } else {
+                clearInterval(timer);
+                gameEnd();
             }
+        }
 
-            function decreaseTime() {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    displayTime();
-                    displayTimeBar();
-                } else {
-                    clearInterval(timer);
-                    gameEnd();
-                }
-            }
-            
-            function displayTime() {
-                document.getElementById('timeLeft').innerHTML = timeLeft;
-            }
+        function displayTime() {
+            document.getElementById('timeLeft').innerHTML = timeLeft;
+        }
 
-            function displayTimeBar() {
-                barFill = document.getElementById("timerFill");
+        function displayTimeBar() {
+            barFill = document.getElementById("timerFill");
 
-                percentFill = 100 - ((timeLeft / maxTime) * 100);
-                barFill.style.width = percentFill + "%";
-            }
+            percentFill = 100 - ((timeLeft / maxTime) * 100);
+            barFill.style.width = percentFill + "%";
+        }
 
-            function gameEnd() {
-                sessionStorage.setItem("letters", letters);
-                sessionStorage.setItem("wordAttempts", JSON.stringify(validWordAttempts));
-                window.location.href = "./results.html";
-            }
-        </script>
-    </head>
-    <body>
-        <div id="time-box" hidden>
+        function gameEnd() {
+            sessionStorage.setItem("letters", letters);
+            sessionStorage.setItem("wordAttempts", JSON.stringify(validWordAttempts));
+            window.location.href = "./results.html";
+        }
+    </script>
+</head>
+
+<body>
+    <div id="main-container">
+        <div id="time-box" class="contentBox">
             <p id="timeLeft"></p>
             <div id="timerBar">
                 <div id="timerBackground"></div>
                 <div id="timerFill"></div>
             </div>
         </div>
-        <p id="letters">_________</p>
-        <button id="vowel-button" onclick="addVowel()">Vowel</button>
-        <button id="cons-button" onclick="addConsonant()">Consonant</button>
-        <form action="javascript:;" onsubmit="wordAttempt()" id="word-form" hidden>
-            <input type="text" id="word" name="word">
-        </form>
-        <div id="word-list"></div>
-    </body>
+
+        <div id="letters-box" class="contentBox">
+            <p id="letters">_ _ _ _ _ _ _ _ _</p>
+        </div>
+
+        <div id="input-box" class="contentBox">
+            <div id="buttons-container">
+                <button id="vowel-button" onclick="addVowel()">Vowel</button>
+                <button id="cons-button" onclick="addConsonant()">Consonant</button>
+            </div>
+            <div id="error-message"></div>
+            <form action="javascript:;" onsubmit="wordAttempt()" id="word-form" hidden>
+                <input type="text" id="word-input" name="word">
+            </form>
+            <div id="word-list"></div>
+        </div>
+    </div>
+</body>
+
 </html>

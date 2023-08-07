@@ -4,10 +4,31 @@
 <head>
     <title>Scrountdown - Instructions</title>
     <link rel="stylesheet" href="styling.css">
+    <style>
+        #instruction-box {
+            padding: 30px;
+            max-width: 800px; 
+        }
+
+        p {
+            padding-bottom: 10px;
+        }
+
+        #image-wrap {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+    </style>
 </head>
 
 <body>
-    How to play the game.
-</body>
-
+    <div id="instruction-box" class="contentBox">
+        <p>"Scrountdown" is a combination of the boardgame Scrabble with the class gameshow Countdown. The game will progress in three stages:</p>
+        <p>Letter selection: You must 9 letters to form words from, selecting a random vowel or random consonant for each one.</p>
+        <p>Word forming: Enter as many words as you can using your 9 letters before the 1 minute timer runs out!</p>
+        <p>Scoring: Once your time is gone, your results will be displayed. Every correct word you enter will earn you points using Scrabble scoring (see below). However, every word entered that isn't recognized will result in -10 points, so be warned!</p>
+        <div id="image-wrap">
+            <img src="./images/scrabble_tiles.jpg" width="400" height="400">
+        </div>
 </html>

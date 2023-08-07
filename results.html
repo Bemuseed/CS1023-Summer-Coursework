@@ -1,35 +1,82 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Word Game - Results</title>
-        <link rel="stylesheet" href="styling.css">
-        <script src="scoring.js"></script>
-        <script src="wordList.js"></script>
-        <script>
-            let letters;
-            let wordAttempts;
 
-            function onLoad() {
-                letters = sessionStorage.getItem("letters");
-                wordAttempts = JSON.parse(sessionStorage.getItem("wordAttempts"));
-                let scoreBox = document.getElementById("score-box");
-                let wordScores = getWordScores(wordAttempts);
-                for (let w of Object.keys(wordScores)) {
-                    scoreBox.innerHTML += "<p>" + w + " - " + wordScores[w] + "</p>";
-                }
+<head>
+    <title>Word Game - Results</title>
+    <link rel="stylesheet" href="styling.css">
+    <style>
+        #score-box {
+            padding: 20px;
+            font-size: 2em;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .leftColumn {
+            flex: 50%;
+            margin-right: 50px;
+        }
+
+        .rightColumn {
+            flex: 50%;
+            text-align: right;
+        }
+
+        #buttons-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            max-width: 150px;
+            margin: 20px;
+            font-size: 1em;
+        }
+    </style>
+    <script src="scoring.js"></script>
+    <script src="wordList.js"></script>
+    <script>
+        let letters;
+        let wordAttempts;
+
+        function onLoad() {
+            letters = sessionStorage.getItem("letters");
+            wordAttempts = JSON.parse(sessionStorage.getItem("wordAttempts"));
+            let scoresElement = document.getElementById("scores");
+            let wordScores = getWordScores(wordAttempts);
+            for (let w of Object.keys(wordScores)) {
+                scoresElement.innerHTML += "<div class=\"row\"><div class=\"leftColumn\">" + w + "</div><div class=\"rightColumn\">" + wordScores[w] + "</div></div>";
             }
+            scoresElement.innerHTML += "<hr>";
+            let totalScores = Object.values(wordScores).reduce((acuumulator, currentValue) => acuumulator + currentValue, 0);
+            scoresElement.innerHTML += "<div class = \"row\"><div class=\"leftColumn\">" + "Total: " + "</div><div class=\"rightColumn\">" + totalScores + "</div></div>";
+        }
 
-            function isAWord(word) {
-                if (wordList.includes(word)) {
-                    return true;
-                }
-                return false;
+        function isAWord(word) {
+            if (wordList.includes(word)) {
+                return true;
             }
+            return false;
+        }
+    </script>
+</head>
+
+<body onload="onLoad()">
+    <div id="score-box" class="contentBox">
+        <p style="text-align: center; font-size: 1.4em">Results</p>
+        <hr>
+        <div id="scores"></div>
+        <div id="buttons-container">
+            <a href="./game.html"><button>Play Again</button></a>
+            <a href="./index.html"><button>Return to menu</button></a>
+        </div>
+    </div>
 
 
-       </script>
-    </head>
-    <body onload="onLoad()">
-        <div id="score-box"></div>
-    </body>
+</body>
+
 </html>
